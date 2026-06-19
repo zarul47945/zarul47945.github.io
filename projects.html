@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Project details for Muhammad Zarul Aziri Bin Maamur.">
+  <meta name="theme-color" content="#020817">
+  <title>Projects | Muhammad Zarul Aziri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=fixed-image-lightbox">
+  <script src="assets/media-loader.js" defer></script>
+  <script src="script.js?v=fixed-image-lightbox" defer></script>
+</head>
+<body id="top">
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="icon-external" viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-9 9M19 14v5H5V5h5"/></symbol>
+    <symbol id="icon-code" viewBox="0 0 24 24"><path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14"/></symbol>
+    <symbol id="icon-play" viewBox="0 0 24 24"><path d="m9 7 8 5-8 5V7Z"/></symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+    <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  </svg>
+
+  <div class="noise" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html#top" aria-label="Back to homepage">
+      <span class="brand-mark">MZ</span>
+      <span class="brand-copy">Muhammad Zarul<br><small>Developer portfolio</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="index.html#about">About Me</a>
+      <a href="index.html#experience">Experience</a>
+      <a class="active" href="index.html#work">Projects</a>
+      <a href="index.html#community">Community</a>
+      <a href="index.html#contact">Connect</a>
+    </nav>
+    <a class="header-cta" href="assets/documents/Muhammad_Zarul_Aziri_Internship_CV_Corrected.docx" download>
+      Download CV
+      <svg><use href="#icon-download"></use></svg>
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+      <svg class="menu-open"><use href="#icon-menu"></use></svg>
+      <svg class="menu-close"><use href="#icon-close"></use></svg>
+    </button>
+  </header>
+
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="index.html#about">01. About Me</a>
+    <a href="index.html#experience">02. Work Experience</a>
+    <a href="index.html#work">03. Projects</a>
+    <a href="index.html#community">04. Community</a>
+    <a href="index.html#contact">05. Connect</a>
+  </nav>
+
+  <main class="detail-page section-shell">
+    <a class="button button-primary detail-back" href="index.html#work">
+      <svg><use href="#icon-arrow"></use></svg>
+      Back to homepage
+    </a>
+    <section class="detail-hero">
+      <div>
+        <span class="detail-eyebrow">Project hub</span>
+        <h1>Projects with real moving parts.</h1>
+      </div>
+      <p>A short hub for my main builds. Each project opens into its own case-study page with screenshots, links and implementation details.</p>
+    </section>
+
+    <article class="project project-schoolshield detail-section" id="schoolshield">
+      <div class="project-topline">
+        <div class="project-index">01</div>
+        <div class="project-tags"><span>Android</span><span>AI vision</span><span>IoT</span><span>Firebase</span></div>
+        <div class="project-year">2026</div>
+      </div>
+      <div class="project-grid">
+        <div class="project-copy">
+          <span class="project-kicker">Final Year Project</span>
+          <h3>SchoolShield</h3>
+          <p class="project-lead">A school-safety response prototype where external AI and wristband sources write incident records to Firebase, then the Android app handles alerts, evidence review, analytics and role-based response.</p>
+          <div class="project-outcomes">
+            <div><strong>Pipeline</strong><span>External AI node and sensor input</span></div>
+            <div><strong>Android</strong><span>Realtime alerts, evidence and analytics</span></div>
+            <div><strong>IoT</strong><span>ESP32 wristband motion events</span></div>
+          </div>
+          <a class="project-link" href="project-schoolshield.html">
+            Open SchoolShield details
+            <svg><use href="#icon-external"></use></svg>
+          </a>
+        </div>
+        <div class="project-media-stack">
+          <div class="media-slot project-cover project-cover-primary" data-media-key="schoolshieldCover" data-media-type="image" tabindex="0">
+            <div class="media-placeholder product-placeholder schoolshield-placeholder">
+              <div class="radar"><span></span></div>
+              <strong>SchoolShield</strong>
+              <small>AI-powered school safety monitoring</small>
+            </div>
+          </div>
+          <div class="media-slot project-detail detail-one" data-media-key="schoolshieldApp" data-media-type="image" tabindex="0">
+            <div class="media-placeholder compact-placeholder"><span>ANDROID APP</span><small>Alert screen</small></div>
+          </div>
+          <div class="media-slot project-detail detail-two" data-media-key="schoolshieldAi" data-media-type="image" tabindex="0">
+            <div class="media-placeholder compact-placeholder"><span>AI NODE</span><small>Detection view</small></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="project project-mathtutor detail-section" id="math-tutor">
+      <div class="project-topline">
+        <div class="project-index">02</div>
+        <div class="project-tags"><span>Next.js</span><span>Supabase</span><span>LiveKit</span><span>TypeScript</span></div>
+        <div class="project-year">2026</div>
+      </div>
+      <div class="project-grid project-grid-reverse">
+        <div class="project-copy">
+          <span class="project-kicker">Full-stack platform</span>
+          <h3>Math Tutor</h3>
+          <p class="project-lead">A deployed online mathematics classroom with public landing pages, student and teacher login flows, admin account control, assigned lessons, worksheet support and LiveKit-powered room preparation.</p>
+          <div class="project-outcomes">
+            <div><strong>3 roles</strong><span>Admin, teacher and student access</span></div>
+            <div><strong>Live lesson</strong><span>Video room, whiteboard and worksheet flow</span></div>
+            <div><strong>Backend</strong><span>Supabase auth, sessions and token function</span></div>
+          </div>
+          <div class="project-links">
+            <a class="project-link" href="project-math-tutor.html">
+              Open Math Tutor details
+              <svg><use href="#icon-external"></use></svg>
+            </a>
+            <a class="project-link secondary-link" href="https://math-tutor-app-lac.vercel.app/" target="_blank" rel="noreferrer">
+              Open live demo
+              <svg><use href="#icon-external"></use></svg>
+            </a>
+          </div>
+        </div>
+        <div class="project-media-stack">
+          <div class="media-slot project-cover project-cover-primary" data-media-key="mathTutorCover" data-media-type="image" tabindex="0">
+            <div class="media-placeholder product-placeholder tutor-placeholder">
+              <div class="equation">x² + y²</div>
+              <strong>Math Tutor</strong>
+              <small>Live lessons, made more human</small>
+            </div>
+          </div>
+          <div class="media-slot project-detail detail-one" data-media-key="mathTutorClassroom" data-media-type="image" tabindex="0">
+            <div class="media-placeholder compact-placeholder"><span>LIVE ROOM</span><small>Classroom view</small></div>
+          </div>
+          <div class="media-slot project-detail detail-two" data-media-key="mathTutorDashboard" data-media-type="image" tabindex="0">
+            <div class="media-placeholder compact-placeholder"><span>DASHBOARD</span><small>Teacher view</small></div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="detail-actions">
+      <a class="button button-primary" href="index.html#work">Back to homepage</a>
+    </div>
+  </main>
+
+  <footer class="site-footer section-shell">
+    <span>© <span id="year"></span> Muhammad Zarul Aziri Bin Maamur</span>
+    <span>Project details</span>
+    <a href="#top">Back to top <svg><use href="#icon-arrow"></use></svg></a>
+  </footer>
+
+  <dialog class="media-dialog" aria-labelledby="media-dialog-title">
+    <button class="dialog-close" type="button" aria-label="Close media details"><svg><use href="#icon-close"></use></svg></button>
+    <span class="dialog-kicker">Media placeholder</span>
+    <h2 id="media-dialog-title">Ready for your visual.</h2>
+    <p>Upload the matching file to the media folder and this placeholder will replace itself automatically.</p>
+    <code class="dialog-path"></code>
+  </dialog>
+</body>
+</html>

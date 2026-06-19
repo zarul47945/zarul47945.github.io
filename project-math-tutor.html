@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Math Tutor project case study for Muhammad Zarul Aziri Bin Maamur.">
+  <meta name="theme-color" content="#020817">
+  <title>Math Tutor Project | Muhammad Zarul Aziri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=fixed-image-lightbox">
+  <script src="script.js?v=fixed-image-lightbox" defer></script>
+</head>
+<body id="top">
+  <svg class="svg-sprite" aria-hidden="true">
+    <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="icon-external" viewBox="0 0 24 24"><path d="M14 5h5v5M19 5l-9 9M19 14v5H5V5h5"/></symbol>
+    <symbol id="icon-code" viewBox="0 0 24 24"><path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14"/></symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+    <symbol id="icon-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  </svg>
+
+  <div class="noise" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+  <header class="site-header">
+    <a class="brand" href="index.html#top" aria-label="Back to homepage">
+      <span class="brand-mark">MZ</span>
+      <span class="brand-copy">Muhammad Zarul<br><small>Developer portfolio</small></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <a href="index.html#about">About Me</a>
+      <a href="index.html#experience">Experience</a>
+      <a class="active" href="index.html#work">Projects</a>
+      <a href="index.html#community">Community</a>
+      <a href="index.html#contact">Connect</a>
+    </nav>
+    <a class="header-cta" href="assets/documents/Muhammad_Zarul_Aziri_Internship_CV_Corrected.docx" download>
+      Download CV
+      <svg><use href="#icon-download"></use></svg>
+    </a>
+    <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+      <svg class="menu-open"><use href="#icon-menu"></use></svg>
+      <svg class="menu-close"><use href="#icon-close"></use></svg>
+    </button>
+  </header>
+
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="index.html#about">01. About Me</a>
+    <a href="index.html#experience">02. Work Experience</a>
+    <a href="index.html#work">03. Projects</a>
+    <a href="index.html#community">04. Community</a>
+    <a href="index.html#contact">05. Connect</a>
+  </nav>
+
+  <main class="detail-page section-shell">
+    <a class="button button-primary detail-back" href="projects.html">
+      <svg><use href="#icon-arrow"></use></svg>
+      Back to projects hub
+    </a>
+
+    <section class="detail-hero project-case-hero">
+      <div>
+        <span class="detail-eyebrow">Full-Stack Web Project 2026</span>
+        <h1>Math Tutor.</h1>
+      </div>
+      <p>A deployed online mathematics classroom that connects public landing pages, teacher and student access, admin-controlled accounts, lesson sessions, worksheets and LiveKit room preparation.</p>
+    </section>
+
+    <section class="detail-section project-showcase" aria-labelledby="math-tutor-overview-title">
+      <img src="project/math-tutor/cover.jpg" alt="Math Tutor project overview with online classroom visual and technology tags">
+      <div class="project-showcase-copy">
+        <span class="project-kicker">Next.js + Supabase + LiveKit + TypeScript</span>
+        <h2 id="math-tutor-overview-title">A real tutoring platform, not only a landing page.</h2>
+        <p>Math Tutor supports the full learning flow: visitors reach the live website, teachers and students sign in, admins manage accounts and assignments, lessons can be prepared for assigned students, and the live room brings video, shared work and worksheet activity into one place.</p>
+        <div class="detail-actions">
+          <a class="button button-primary" href="https://math-tutor-app-lac.vercel.app/" target="_blank" rel="noreferrer">Open live website</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-section" aria-labelledby="math-tutor-summary-title">
+      <h2 id="math-tutor-summary-title">Project summary</h2>
+      <article class="role-card">
+        <time>2026</time>
+        <div>
+          <span class="role-meta">Online mathematics classroom</span>
+          <h3>Math Tutor web platform</h3>
+          <p>The project is built from the Math Tutor app source folder and deployed online. It focuses on making private mathematics lessons easier to organize, start and run from a browser.</p>
+          <ul>
+            <li>Built a public Next.js website with student and staff login paths.</li>
+            <li>Implemented admin, teacher and student flows for controlled account access and lesson organization.</li>
+            <li>Used Supabase for authentication, profiles, assignments, sessions, worksheet records and room state.</li>
+            <li>Prepared LiveKit video-room access through a Supabase Edge Function so API secrets stay server-side.</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section class="detail-section" aria-labelledby="math-tutor-flow-title">
+      <h2 id="math-tutor-flow-title">How it works</h2>
+      <div class="experience-topic-grid">
+        <article class="experience-topic-card">
+          <span>01 / Admin</span>
+          <h3>Account control</h3>
+          <p>Administrators can create controlled teacher, student and admin accounts, then assign students to the correct teacher.</p>
+        </article>
+        <article class="experience-topic-card">
+          <span>02 / Teacher</span>
+          <h3>Lesson setup</h3>
+          <p>Teachers see assigned students, create lessons, prepare worksheets and open active sessions for the learner.</p>
+        </article>
+        <article class="experience-topic-card">
+          <span>03 / Student</span>
+          <h3>Guided classroom</h3>
+          <p>Students sign in, open prepared lessons, enter the live room and work through video, whiteboard and worksheet activities.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="detail-section" aria-labelledby="math-tutor-features-title">
+      <h2 id="math-tutor-features-title">Main features</h2>
+      <div class="project-feature-grid">
+        <article>
+          <strong>Role dashboards</strong>
+          <p>Separate experiences for admins, teachers and students keep the platform organized around each user's responsibility.</p>
+        </article>
+        <article>
+          <strong>Live classroom</strong>
+          <p>LiveKit room preparation supports video lessons while keeping join-token generation on the server side.</p>
+        </article>
+        <article>
+          <strong>Worksheet flow</strong>
+          <p>Teachers can prepare worksheet questions or upload worksheet files, then students can answer during the lesson.</p>
+        </article>
+        <article>
+          <strong>Shared tools</strong>
+          <p>The room includes a shared timer, participant state, whiteboard drawing and synchronized lesson activity.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="detail-section" aria-labelledby="math-tutor-gallery-title">
+      <h2 id="math-tutor-gallery-title">Project images</h2>
+      <p class="detail-section-intro">Click any image to open it larger. These visuals focus on the actual Math Tutor dashboard and classroom flow.</p>
+      <div class="detail-gallery project-gallery">
+        <figure>
+          <a href="project/math-tutor/cover.jpg" aria-label="Open Math Tutor overview image">
+            <img src="project/math-tutor/cover.jpg" alt="Math Tutor project overview cover">
+          </a>
+          <figcaption>Project overview</figcaption>
+        </figure>
+        <figure>
+          <a href="project/math-tutor/teacher-dashboard.png" aria-label="Open Math Tutor teacher dashboard screenshot">
+            <img src="project/math-tutor/teacher-dashboard.png" alt="Math Tutor teacher dashboard screenshot">
+          </a>
+          <figcaption>Teacher dashboard</figcaption>
+        </figure>
+        <figure>
+          <a href="project/math-tutor/live-room.png" aria-label="Open Math Tutor live lesson room screenshot">
+            <img src="project/math-tutor/live-room.png" alt="Math Tutor live lesson room screenshot">
+          </a>
+          <figcaption>Live lesson room</figcaption>
+        </figure>
+        <figure>
+          <a href="project/math-tutor/whiteboard.png" aria-label="Open Math Tutor classroom whiteboard screenshot">
+            <img src="project/math-tutor/whiteboard.png" alt="Math Tutor classroom whiteboard screenshot">
+          </a>
+          <figcaption>Classroom whiteboard</figcaption>
+        </figure>
+      </div>
+      <div class="detail-actions">
+        <a class="button button-primary" href="https://math-tutor-app-lac.vercel.app/" target="_blank" rel="noreferrer">Open live website</a>
+        <a class="button button-primary" href="projects.html">Back to projects hub</a>
+        <a class="text-link" href="index.html#work">Back to homepage <svg><use href="#icon-arrow"></use></svg></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer section-shell">
+    <span>&copy; <span id="year"></span> Muhammad Zarul Aziri Bin Maamur</span>
+    <span>Math Tutor project detail</span>
+    <a href="#top">Back to top <svg><use href="#icon-arrow"></use></svg></a>
+  </footer>
+</body>
+</html>
