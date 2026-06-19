@@ -145,10 +145,8 @@ svg {
   right: clamp(16px, 2.4vw, 34px);
   bottom: clamp(16px, 2.8vw, 34px);
   z-index: 95;
-  display: grid;
-  gap: 10px;
-  justify-items: end;
-  width: min(310px, calc(100vw - 28px));
+  width: 142px;
+  height: 196px;
   pointer-events: none;
   opacity: 1;
   transform: none;
@@ -180,8 +178,10 @@ body.menu-open .mascot {
 }
 
 .mascot-bubble {
-  position: relative;
-  width: min(275px, 100%);
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  width: min(275px, calc(100vw - 48px));
   padding: 14px;
   border: 1px solid rgba(255, 255, 255, 0.68);
   border-radius: 18px 18px 7px 18px;
@@ -272,7 +272,7 @@ body.menu-open .mascot {
   filter: drop-shadow(0 18px 26px rgba(2, 8, 23, 0.18));
   pointer-events: auto;
   touch-action: none;
-  transform-style: preserve-3d;
+  transform-origin: center bottom;
 }
 
 .mascot.is-settling .mascot-stage {
@@ -292,30 +292,24 @@ body.menu-open .mascot {
   transform: translateX(-50%);
 }
 
-.mascot-canvas,
-.mascot-fallback {
+.mascot-sprite {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-}
-
-.mascot-canvas {
-  opacity: 0;
-}
-
-.mascot-fallback {
   object-fit: contain;
-  opacity: 1;
+  object-position: center bottom;
   animation: mascot-float 3.4s ease-in-out infinite;
+  transform-origin: center bottom;
+  transition: transform 180ms ease;
 }
 
-.mascot.has-webgl .mascot-canvas {
-  opacity: 1;
+.mascot.is-walk-sprite .mascot-sprite {
+  animation: none;
 }
 
-.mascot.has-webgl .mascot-fallback {
-  opacity: 0;
+.mascot.is-walk-sprite.is-facing-left .mascot-sprite {
+  transform: scaleX(-1);
 }
 
 .mascot-button {
@@ -330,20 +324,6 @@ body.menu-open .mascot {
 
 .mascot.is-dragging .mascot-button {
   cursor: grabbing;
-}
-
-.mascot-button::after {
-  position: absolute;
-  right: 4px;
-  bottom: 16px;
-  width: 14px;
-  aspect-ratio: 1;
-  border: 3px solid rgba(255, 255, 255, 0.96);
-  border-radius: 999px;
-  background: var(--cyan);
-  box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.45);
-  content: "";
-  animation: mascot-pulse 1.8s ease-out infinite;
 }
 
 .mascot-button:focus-visible {
@@ -393,16 +373,6 @@ body.menu-open .mascot {
 
   70% {
     transform: translateY(1px) rotate(1.2deg);
-  }
-}
-
-@keyframes mascot-pulse {
-  70% {
-    box-shadow: 0 0 0 10px rgba(34, 211, 238, 0);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0);
   }
 }
 

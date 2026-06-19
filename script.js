@@ -221,7 +221,7 @@ function initPortfolioMascot() {
   const homePrefix = onHomePage ? "" : "index.html";
   const mascot = document.createElement("aside");
   mascot.className = "mascot";
-  mascot.setAttribute("aria-label", "3D portfolio guide");
+  mascot.setAttribute("aria-label", "Portfolio mascot guide");
   mascot.innerHTML = `
     <div class="mascot-bubble" aria-live="polite">
       <span class="mascot-kicker">Mini guide</span>
@@ -232,8 +232,7 @@ function initPortfolioMascot() {
       </div>
     </div>
     <div class="mascot-stage">
-      <canvas class="mascot-canvas" aria-hidden="true"></canvas>
-      <img class="mascot-fallback" src="assets/mascot/zarul-mascot-front.png" alt="" loading="lazy">
+      <img class="mascot-sprite" src="assets/mascot/sprites/front-idle.png" alt="" loading="eager" decoding="async">
       <button class="mascot-button" type="button" aria-label="Hear from the portfolio mascot"></button>
     </div>
     <button class="mascot-close" type="button" aria-label="Hide mascot">
@@ -246,7 +245,7 @@ function initPortfolioMascot() {
     "Hi, I am Zarul's portfolio buddy. Projects and contact are one tap away.",
     "SchoolShield and Math Tutor show the strongest full-system builds.",
     "For internship details, the contact section has email, phone, LinkedIn and GitHub.",
-    "Hover near me and I will turn a little in 3D."
+    "Drag me around the page while you explore the portfolio."
   ];
   const sectionMessages = {
     about: messages[0],
@@ -305,9 +304,77 @@ function initPortfolioMascot() {
     mascotObserver.observe(section);
   });
 
-  initMascotThreeScene(mascot).catch(() => {
-    mascot.classList.add("mascot-fallback-ready");
+  initMascotSprites(mascot);
+}
+
+function initMascotSprites(mascot) {
+  const sprite = mascot.querySelector(".mascot-sprite");
+  if (!sprite) return;
+
+  const frames = {
+    front: "assets/mascot/sprites/front-idle.png",
+    stand: "assets/mascot/sprites/right-stand.png",
+    walkA: "assets/mascot/sprites/right-walk-a.png",
+    walkB: "assets/mascot/sprites/right-walk-b.png"
+  };
+  const walkSequence = ["walkA", "stand", "walkB", "stand"];
+  const frameDuration = 380;
+  const standingLeadIn = 260;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let currentFrame = "front";
+  let sequenceIndex = 0;
+  let nextFrameAt = 0;
+  let wasWalking = false;
+  let lastFacingLeft = false;
+
+  Object.values(frames).forEach((src) => {
+    const image = new Image();
+    image.src = src;
   });
+
+  function setFrame(frameKey) {
+    if (frameKey === currentFrame) return;
+    currentFrame = frameKey;
+    sprite.src = frames[frameKey];
+    sprite.dataset.frame = frameKey;
+  }
+
+  function renderFrame(time = 0) {
+    const isWalking = !reducedMotion.matches &&
+      (mascot.classList.contains("is-settling") || mascot.classList.contains("is-dragging"));
+    const isFacingLeft = mascot.classList.contains("is-facing-left");
+    mascot.classList.toggle("is-walk-sprite", isWalking);
+
+    if (!isWalking) {
+      sequenceIndex = 0;
+      nextFrameAt = 0;
+      setFrame("front");
+      wasWalking = false;
+      lastFacingLeft = isFacingLeft;
+      requestAnimationFrame(renderFrame);
+      return;
+    }
+
+    if (!wasWalking || isFacingLeft !== lastFacingLeft) {
+      sequenceIndex = 0;
+      nextFrameAt = time + standingLeadIn;
+      setFrame("stand");
+      wasWalking = true;
+      lastFacingLeft = isFacingLeft;
+      requestAnimationFrame(renderFrame);
+      return;
+    }
+
+    if (time >= nextFrameAt) {
+      setFrame(walkSequence[sequenceIndex]);
+      sequenceIndex = (sequenceIndex + 1) % walkSequence.length;
+      nextFrameAt = time + frameDuration;
+    }
+
+    requestAnimationFrame(renderFrame);
+  }
+
+  renderFrame();
 }
 
 function initMascotMovement(mascot, stage) {
@@ -315,6 +382,8 @@ function initMascotMovement(mascot, stage) {
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const laptopMascotQuery = window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)");
+  const roamMoveDuration = 5400;
+  const roamRestDuration = 10000;
   const state = {
     x: 0,
     y: 0,
@@ -327,16 +396,18 @@ function initMascotMovement(mascot, stage) {
     suppressClick: false,
     pauseUntil: 0,
     roamTimer: 0,
+    settleTimer: 0,
     resizeTimer: 0,
-    pointIndex: 0
+    pointIndex: 0,
+    roaming: false
   };
 
   function bounds() {
-    const rect = mascot.getBoundingClientRect();
-    const width = rect.width || 310;
-    const height = rect.height || 332;
-    const topSafe = window.innerWidth <= 820 ? 92 : 112;
+    const rect = stage.getBoundingClientRect();
+    const width = rect.width || 142;
+    const height = rect.height || 196;
     const margin = window.innerWidth <= 820 ? 14 : 24;
+    const topSafe = margin;
 
     return {
       margin,
@@ -367,23 +438,21 @@ function initMascotMovement(mascot, stage) {
     mascot.style.setProperty("--mascot-y", `${Math.round(state.y)}px`);
     mascot.classList.toggle("is-settling", !instant);
     mascot.classList.add("is-positioned");
-
-    if (!instant) {
-      window.setTimeout(() => mascot.classList.remove("is-settling"), 5400);
-    }
   }
 
   function movementPoints() {
     const area = bounds();
     const midY = clamp(window.innerHeight * 0.52 - area.height / 2, area.minY, area.maxY);
-    const upperY = clamp(window.innerHeight * 0.32 - area.height / 2, area.minY, area.maxY);
     const lowerY = clamp(window.innerHeight * 0.74 - area.height / 2, area.minY, area.maxY);
     const centerX = clamp(window.innerWidth * 0.56 - area.width / 2, area.minX, area.maxX);
+    const centerY = clamp(window.innerHeight * 0.5 - area.height / 2, area.minY, area.maxY);
 
     return [
       [area.maxX, area.maxY],
       [area.minX, lowerY],
-      [area.maxX, upperY],
+      [area.minX, area.minY],
+      [area.maxX, area.minY],
+      [centerX, centerY],
       [centerX, area.maxY],
       [area.minX, midY]
     ];
@@ -393,34 +462,52 @@ function initMascotMovement(mascot, stage) {
     return !reducedMotion.matches &&
       laptopMascotQuery.matches &&
       !state.dragging &&
+      !state.roaming &&
       !mascot.matches(":hover") &&
       !mascot.classList.contains("is-open") &&
       !mascot.classList.contains("is-hidden") &&
       Date.now() > state.pauseUntil;
   }
 
-  function scheduleRoam(delay = 8500) {
+  function finishRoam() {
+    window.clearTimeout(state.settleTimer);
+    state.roaming = false;
+    mascot.classList.remove("is-settling");
+    mascot.classList.remove("is-roaming");
+    scheduleRoam(roamRestDuration);
+  }
+
+  function startRoam() {
+    if (!canRoam()) {
+      scheduleRoam(2500);
+      return;
+    }
+
+    const points = movementPoints();
+    state.pointIndex = (state.pointIndex + 1) % points.length;
+    const [nextX, nextY] = points[state.pointIndex];
+    state.roaming = true;
+    mascot.classList.add("is-roaming");
+    setPosition(nextX, nextY);
+    window.clearTimeout(state.settleTimer);
+    state.settleTimer = window.setTimeout(finishRoam, roamMoveDuration);
+  }
+
+  function scheduleRoam(delay = roamRestDuration) {
     window.clearTimeout(state.roamTimer);
     if (reducedMotion.matches || !laptopMascotQuery.matches) return;
+    if (state.roaming) return;
 
-    state.roamTimer = window.setTimeout(() => {
-      if (!canRoam()) {
-        scheduleRoam(2500);
-        return;
-      }
-
-      const points = movementPoints();
-      state.pointIndex = (state.pointIndex + 1) % points.length;
-      const [nextX, nextY] = points[state.pointIndex];
-      mascot.classList.add("is-roaming");
-      setPosition(nextX, nextY);
-      scheduleRoam(9000);
-    }, delay);
+    state.roamTimer = window.setTimeout(startRoam, delay);
   }
 
   function pause(duration = 8000) {
+    window.clearTimeout(state.roamTimer);
+    window.clearTimeout(state.settleTimer);
+    state.roaming = false;
     state.pauseUntil = Date.now() + duration;
     mascot.classList.remove("is-roaming");
+    mascot.classList.remove("is-settling");
     scheduleRoam(duration + 1500);
   }
 
@@ -496,280 +583,17 @@ function initMascotMovement(mascot, stage) {
   mascot.addEventListener("pointerenter", () => pause(7000));
   mascot.addEventListener("pointerleave", () => {
     mascot.classList.remove("is-open");
-    scheduleRoam(2500);
+    if (state.roaming) return;
+    scheduleRoam(roamRestDuration);
   });
 
   requestAnimationFrame(() => {
     const [x, y] = movementPoints()[0];
     setPosition(x, y, true);
-    scheduleRoam(7000);
+    scheduleRoam(roamRestDuration);
   });
 
   return { consumeDragClick, pause };
-}
-
-async function initMascotThreeScene(mascot) {
-  const stage = mascot.querySelector(".mascot-stage");
-  const canvas = mascot.querySelector(".mascot-canvas");
-  if (!stage || !canvas) return;
-
-  const THREE = await import("./assets/vendor/three.module.js");
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 100);
-  camera.position.set(0, 0.08, 5.2);
-
-  const renderer = new THREE.WebGLRenderer({
-    alpha: true,
-    antialias: true,
-    canvas,
-    preserveDrawingBuffer: true
-  });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-  const ambient = new THREE.AmbientLight(0xffffff, 2.1);
-  const keyLight = new THREE.DirectionalLight(0x9eeaff, 2.2);
-  keyLight.position.set(2.6, 3.2, 4);
-  scene.add(ambient, keyLight);
-
-  const loader = new THREE.TextureLoader();
-  const loadTexture = (src) => new Promise((resolve, reject) => {
-    loader.load(src, resolve, undefined, reject);
-  });
-  const partDefinitions = [
-    {
-      key: "leftLeg",
-      src: "assets/mascot/parts/left-leg.png",
-      box: [172, 415, 262, 666],
-      pivot: [218, 430],
-      parent: "walker",
-      order: 3
-    },
-    {
-      key: "rightLeg",
-      src: "assets/mascot/parts/right-leg.png",
-      box: [256, 415, 360, 666],
-      pivot: [302, 430],
-      parent: "walker",
-      order: 4
-    },
-    {
-      key: "torso",
-      src: "assets/mascot/parts/torso.png",
-      box: [158, 238, 362, 488],
-      pivot: [260, 360],
-      parent: "body",
-      order: 6
-    },
-    {
-      key: "leftArm",
-      src: "assets/mascot/parts/left-arm.png",
-      box: [96, 260, 222, 520],
-      pivot: [182, 286],
-      parent: "body",
-      order: 8
-    },
-    {
-      key: "rightArm",
-      src: "assets/mascot/parts/right-arm.png",
-      box: [298, 260, 424, 520],
-      pivot: [338, 286],
-      parent: "body",
-      order: 9
-    },
-    {
-      key: "head",
-      src: "assets/mascot/parts/head.png",
-      box: [112, 54, 408, 332],
-      pivot: [260, 272],
-      parent: "body",
-      order: 10
-    }
-  ];
-  const [frontTexture, ...partTextures] = await Promise.all([
-    loadTexture("assets/mascot/zarul-mascot-front.png"),
-    ...partDefinitions.map((part) => loadTexture(part.src))
-  ]);
-
-  [frontTexture, ...partTextures].forEach((texture) => {
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.minFilter = THREE.LinearMipmapLinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-  });
-
-  const group = new THREE.Group();
-  scene.add(group);
-
-  const pixelScale = 0.004;
-  const walker = new THREE.Group();
-  const bodyGroup = new THREE.Group();
-  const rigParts = {};
-  group.add(walker);
-  walker.add(bodyGroup);
-
-  function pointToWorld(point) {
-    return {
-      x: (point[0] - 260) * pixelScale,
-      y: (360 - point[1]) * pixelScale
-    };
-  }
-
-  function boxCenterToWorld(box) {
-    return pointToWorld([(box[0] + box[2]) / 2, (box[1] + box[3]) / 2]);
-  }
-
-  function makeRigPart(definition, texture) {
-    const box = definition.box;
-    const width = (box[2] - box[0]) * pixelScale;
-    const height = (box[3] - box[1]) * pixelScale;
-    const center = boxCenterToWorld(box);
-    const pivot = pointToWorld(definition.pivot);
-    const pivotGroup = new THREE.Group();
-    const material = new THREE.MeshBasicMaterial({
-      depthTest: false,
-      depthWrite: false,
-      map: texture,
-      transparent: true
-    });
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), material);
-    mesh.position.set(center.x - pivot.x, center.y - pivot.y, 0);
-    mesh.renderOrder = definition.order;
-    pivotGroup.position.set(pivot.x, pivot.y, 0);
-    pivotGroup.add(mesh);
-
-    if (definition.parent === "body") {
-      bodyGroup.add(pivotGroup);
-    } else {
-      walker.add(pivotGroup);
-    }
-
-    rigParts[definition.key] = pivotGroup;
-    return pivotGroup;
-  }
-
-  partDefinitions.forEach((definition, index) => {
-    makeRigPart(definition, partTextures[index]);
-  });
-
-  const softDepth = new THREE.Mesh(
-    new THREE.PlaneGeometry(2.08, 2.88),
-    new THREE.MeshBasicMaterial({
-      color: 0x071b33,
-      depthTest: false,
-      depthWrite: false,
-      map: frontTexture,
-      opacity: 0.018,
-      transparent: true
-    })
-  );
-  softDepth.position.set(-0.035, -0.02, -0.08);
-  softDepth.renderOrder = 1;
-  walker.add(softDepth);
-
-  const base = new THREE.Mesh(
-    new THREE.CircleGeometry(0.92, 72),
-    new THREE.MeshBasicMaterial({ color: 0x58d6ff, opacity: 0.18, transparent: true })
-  );
-  base.rotation.x = -Math.PI / 2;
-  base.position.set(0, -1.34, -0.3);
-  base.scale.y = 0.38;
-  group.add(base);
-
-  const ring = new THREE.Mesh(
-    new THREE.RingGeometry(0.56, 0.86, 72),
-    new THREE.MeshBasicMaterial({ color: 0x2563eb, opacity: 0.22, transparent: true })
-  );
-  ring.rotation.x = -Math.PI / 2;
-  ring.position.set(0, -1.33, -0.28);
-  ring.scale.y = 0.38;
-  group.add(ring);
-
-  let pointerX = 0;
-  let pointerY = 0;
-  let targetX = 0;
-  let targetY = 0;
-  let walkStrength = 0;
-  let currentFacing = 1;
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  function resizeMascotScene() {
-    const { width, height } = stage.getBoundingClientRect();
-    if (!width || !height) return;
-    renderer.setSize(width, height, false);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-  }
-
-  const resizeObserver = new ResizeObserver(resizeMascotScene);
-  resizeObserver.observe(stage);
-  resizeMascotScene();
-
-  stage.addEventListener("pointermove", (event) => {
-    const rect = stage.getBoundingClientRect();
-    targetX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-    targetY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-  });
-
-  stage.addEventListener("pointerleave", () => {
-    targetX = 0;
-    targetY = 0;
-  });
-
-  function render(time = 0) {
-    pointerX += (targetX - pointerX) * 0.08;
-    pointerY += (targetY - pointerY) * 0.08;
-
-    const seconds = time * 0.001;
-    const isWalking = !reducedMotion &&
-      (mascot.classList.contains("is-settling") || mascot.classList.contains("is-dragging"));
-    const targetWalkStrength = isWalking ? 1 : 0;
-    const targetFacing = mascot.classList.contains("is-facing-left") ? -1 : 1;
-    walkStrength += (targetWalkStrength - walkStrength) * 0.08;
-    currentFacing += (targetFacing - currentFacing) * 0.12;
-
-    const step = Math.sin(seconds * 4.15);
-    const counterStep = Math.sin(seconds * 4.15 + Math.PI);
-    const footLift = Math.max(0, step) * walkStrength;
-    const counterFootLift = Math.max(0, counterStep) * walkStrength;
-    const hipSway = Math.sin(seconds * 4.15 + Math.PI / 2) * walkStrength;
-    const bodyBob = Math.abs(Math.sin(seconds * 4.15)) * 0.035 * walkStrength;
-    const travelLean = currentFacing * 0.035 * walkStrength;
-    const idleTurn = reducedMotion ? 0 : Math.sin(seconds * 1.25) * 0.07;
-    const idleLift = reducedMotion ? 0 : Math.sin(seconds * 2.1) * 0.035;
-
-    const rigScale = 1.1;
-    walker.scale.x = (currentFacing || 1) * rigScale;
-    walker.scale.y = rigScale;
-    walker.position.y = idleLift + bodyBob;
-    walker.position.x = hipSway * 0.012 * currentFacing;
-    walker.rotation.z = travelLean + hipSway * 0.018;
-
-    bodyGroup.position.x = hipSway * 0.022;
-    bodyGroup.position.y = bodyBob * 0.45;
-    bodyGroup.rotation.z = hipSway * 0.045 + travelLean * 0.45;
-
-    rigParts.head.rotation.z = -bodyGroup.rotation.z * 0.55 + pointerX * 0.025;
-    rigParts.head.position.y = bodyBob * 0.2;
-    rigParts.leftArm.rotation.z = -step * 0.3 * walkStrength - 0.04 * walkStrength;
-    rigParts.rightArm.rotation.z = step * 0.3 * walkStrength + 0.04 * walkStrength;
-    rigParts.leftLeg.rotation.z = step * 0.34 * walkStrength;
-    rigParts.rightLeg.rotation.z = counterStep * 0.34 * walkStrength;
-    rigParts.leftLeg.position.y = footLift * 0.035;
-    rigParts.rightLeg.position.y = counterFootLift * 0.035;
-    rigParts.leftLeg.position.x = -Math.max(0, -step) * 0.026 * walkStrength;
-    rigParts.rightLeg.position.x = Math.max(0, step) * 0.026 * walkStrength;
-
-    group.rotation.y = pointerX * 0.18 + idleTurn - currentFacing * walkStrength * 0.08;
-    group.rotation.x = pointerY * -0.075;
-    base.rotation.z = reducedMotion ? 0 : seconds * 0.18;
-    ring.rotation.z = reducedMotion ? 0 : seconds * -0.28;
-
-    renderer.render(scene, camera);
-    if (!reducedMotion) requestAnimationFrame(render);
-  }
-
-  mascot.classList.add("has-webgl");
-  render();
 }
 
 initPortfolioMascot();
