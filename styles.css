@@ -1632,7 +1632,8 @@ body.menu-open .mascot {
 .project-showcase img {
   min-height: 360px;
   border-radius: 24px;
-  object-fit: cover;
+  object-fit: contain;
+  background: rgba(2, 8, 23, 0.42);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
 }
 
@@ -1694,6 +1695,8 @@ body.menu-open .mascot {
 
 .project-gallery img {
   height: 340px;
+  object-fit: contain;
+  background: var(--paper);
 }
 
 .secondary-link {
@@ -2940,12 +2943,26 @@ body.menu-open .mascot {
     grid-template-columns: 1fr;
   }
 
+  .project-showcase {
+    padding: 12px;
+  }
+
+  .project-showcase img {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+    border-radius: 20px;
+  }
+
   .role-gallery {
     grid-template-columns: 1fr;
   }
 
   .detail-gallery img {
     height: 280px;
+  }
+
+  .project-gallery img {
+    height: min(76vw, 420px);
   }
 
   .role-gallery img {
