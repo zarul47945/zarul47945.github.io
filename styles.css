@@ -2616,6 +2616,15 @@ body.menu-open .mascot {
     letter-spacing: -.04em;
   }
 
+  .mobile-nav .mobile-cv-link {
+    margin-top: 18px;
+    padding: 18px 20px;
+    color: var(--sky);
+    border: 1px solid rgba(34, 211, 238, 0.36);
+    border-radius: 18px;
+    background: rgba(34, 211, 238, 0.1);
+  }
+
   .mascot {
     right: 14px;
     bottom: 14px;
